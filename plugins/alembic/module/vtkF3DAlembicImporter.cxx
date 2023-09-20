@@ -78,14 +78,17 @@ public:
     vtkNew<vtkCellArray> polys;
     vtkNew<vtkPolyData> polydata;
 
-    Alembic::AbcGeom::IPolyMeshSchema::Sample samp;
-    if (pmesh.getSchema().getNumSamples() > 0)
+    const Alembic::AbcGeom::IPolyMeshSchema & schema = pmesh.getSchema();
+    if (schema.getNumSamples() > 0)
     {
-      pmesh.getSchema().get(samp);
+      Alembic::AbcGeom::IPolyMeshSchema::Sample samp;
+      schema.get(samp);
 
       Alembic::AbcGeom::P3fArraySamplePtr positions = samp.getPositions();
       Alembic::AbcGeom::Int32ArraySamplePtr indices = samp.getFaceIndices();
       Alembic::AbcGeom::Int32ArraySamplePtr counts = samp.getFaceCounts();
+      Alembic::AbcGeom::IN3fGeomParam normalsParams = schema.getNormalsParam();
+      Alembic::AbcGeom::IV2fGeomParam uvParams = schema.getUVsParam();
 
       size_t P_size = positions->size();
       size_t counts_size = counts->size();
