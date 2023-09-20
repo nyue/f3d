@@ -1,0 +1,24 @@
+{
+	"version": 6,
+	"cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 25,
+		"patch": 0
+	},
+	"configurePresets": [
+		{
+			"name": "linux-debug",
+			"displayName": "Linux Debug Config",
+			"description": "Linux debug build using Ninja generator",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/linux-debug",
+			"cacheVariables": {
+				"Imath_DIR" : "$env{HOME}/systems/Imath/3.1.6/lib/cmake/Imath",
+				"Alembic_DIR" : "$env{HOME}/systems/Alembic/1.8.4/lib/cmake/Alembic",
+				"F3D_PLUGIN_BUILD_ALEMBIC" : "ON",
+				"VTK_DIR" : "$env{HOME}/systems/VTK/9.2.2/static/lib/cmake/vtk-9.2",
+				"CMAKE_BUILD_TYPE" : "Debug"
+			}
+		}
+	]
+}
