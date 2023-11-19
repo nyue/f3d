@@ -87,6 +87,8 @@ class vtkF3DAlembicReader::vtkInternals
   void PointDuplicateAccumulator(
     const IntermediateGeometry& original_data, IntermediateGeometry& duplicated_data)
   {
+    duplicated_data._uv_is_facevarying = original_data._uv_is_facevarying;
+    duplicated_data._N_is_facevarying = original_data._N_is_facevarying;
     bool need_to_duplicate = original_data._uv_is_facevarying || original_data._N_is_facevarying;
 
     auto uv_map_iter = original_data._attributes.find("uv");
@@ -205,10 +207,8 @@ class vtkF3DAlembicReader::vtkInternals
     }
     polydata->SetPolys(cells);
     vtkDataSetAttributes* point_attributes = polydata->GetAttributes(vtkDataSet::POINT);
-    vtkDataSetAttributes* cell_attributes = polydata->GetAttributes(vtkDataSet::CELL);
 
     assert(point_attributes != nullptr);
-    assert(cell_attributes != nullptr);
     if (have_N)
     {
       vtkNew<vtkFloatArray> normals;
@@ -217,14 +217,7 @@ class vtkF3DAlembicReader::vtkInternals
       {
         normals->InsertNextTuple3(N.x, N.y, N.z);
       }
-      if (data._N_is_facevarying)
-      {
-        cell_attributes->SetNormals(normals);
-      }
-      else
-      {
-        point_attributes->SetNormals(normals);
-      }
+      point_attributes->SetNormals(normals);
     }
 
     if (have_uv)
@@ -235,14 +228,7 @@ class vtkF3DAlembicReader::vtkInternals
       {
         uvs->InsertNextTuple2(uv.x, uv.y);
       }
-      if (data._uv_is_facevarying)
-      {
-        cell_attributes->SetTCoords(uvs);
-      }
-      else
-      {
-        point_attributes->SetTCoords(uvs);
-      }
+      point_attributes->SetTCoords(uvs);
     }
   }
 
